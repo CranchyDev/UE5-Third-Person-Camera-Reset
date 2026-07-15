@@ -6,6 +6,11 @@
 #include "GameFramework/Character.h"
 #include "YourCharacter.generated.h"
 
+#include "EnhancedInputSubsystems.h"
+#include "EnhancedInputComponent.h"
+#include "InputMappingContext.h"
+#include "InputAction.h"
+
 /**
  * 
  */
@@ -40,4 +45,13 @@ protected:
 	*/
 	// UPROPERTY(BlueprintReadWrite, Category = "Camera")
 	// bool bCameraReset = false;
+
+	// If this IMC (InputMappingContext) isn't defaulted within the Editor, 
+	// you MUST instantiate it within the .cpp file.
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputMappingContext* IMC_Default;
+
+	// Same goes here for this IA (InputAction).
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* IA_CameraReset;
 };
