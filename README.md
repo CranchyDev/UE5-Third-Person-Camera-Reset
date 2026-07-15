@@ -41,7 +41,8 @@ Further information on how these calculations
 
 <hr>
 
-#### **Short Code template if you're in a hurry ;)**
+> [!NOTE]
+> #### **Short Code template if you're in a hurry ;)**
 
 ##### **YourClassName.cpp**
 
@@ -81,7 +82,7 @@ void AYourClassName::CameraReset(float InDeltaTime)
 ```
 <hr>
 
-#### **Long code template if you want or need the extra explanations**
+#### Long code template if you want or need the extra explanations
 
 ##### **YourClassName.h**
 
