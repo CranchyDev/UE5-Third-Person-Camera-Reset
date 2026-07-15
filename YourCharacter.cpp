@@ -40,6 +40,13 @@ void AYourCharacter::SetupInputComponent(UInputComponent* PlayerInputComponent)
 	{
 		if (ULocalPlayer* LP = PC->GetLocalPlayer())
 		{
+			// If IMC_Default does not have any prior implementation from Blueprints then add them here.
+			if (IMC_Default == nullptr)
+			{
+				// NewObject here essentially creates an instance of this IMC (InputMappingContext) and assigns a memory address to it.
+				IMC_Default = NewObject<UInputMappingContext>(this, UInputMappingContext::StaticClass(), TEXT("IMC Default"));
+			}
+			
 			if (UEnhancedInputLocalPlayerSubsystem* EILPS = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LP))
 			{
 				UInputMappingContext* IMC_Default;
@@ -53,6 +60,12 @@ void AYourCharacter::SetupInputComponent(UInputComponent* PlayerInputComponent)
 					// Sets the IMC_Default as the first Input Mapping Context.
 					EILPS->AddMappingContext(IMC_Default, 0);
 
+					// Adds IA_Action if it wasn't previously setup from Blueprints
+					if (IA_CameraReset == nullptr)
+					{
+						IA_CameraReset = NewObject<UInputAction>(this, UInputAction::StaticClass(), TEXT("R"));
+					}
+					
 					// Importantly verifies if the InputComponent (check InputComponent.h/.cpp for further information) is
 					// of the type 'EnhancedInputComponent', which is a more advanced version of the 'InputComponent'.
 					if (UEnhancedInputComponent* EIC = Cast<UEnhancedInputComponent>(InputComponent))
