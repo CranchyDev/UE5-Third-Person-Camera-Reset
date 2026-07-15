@@ -86,12 +86,10 @@ void AYourPlayerController::CameraReset(float InDeltaTime)
 
 #### Link to each respective file
 
-##### **YourPlayerController.h [insertlinkhere]**
-##### **YourPlayerController.cpp [insertlinkhere]**
-##### **YourCharacter.h [insertlinkhere]**
-##### **YourCharacter.cpp [insertlinkhere]**
-
-**Please don't forget to change the name of the Class from this code. It's probably not 'YourPlayerController' and 'YourCharacter', I guess?**
+##### [**YourPlayerController.h**](YourPlayerController.h)
+##### [**YourPlayerController.cpp**](YourPlayerController.cpp)
+##### [**YourCharacter.h**](YourCharacter.h)
+##### [**YourCharacter.cpp**](YourCharacter.cpp)
 
 ### Blueprint
 
