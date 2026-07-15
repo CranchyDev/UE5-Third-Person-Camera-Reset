@@ -22,7 +22,7 @@ Lastly, the **Control Rotation** as mentioned above, is basically the camera vie
 
 - **This works fundamentally different from the Actor Rotation.**
 
-- **The rotation of an Actor only ranges from 0º to 180º and drops down to -180º.**
+- **The rotation Yaw of an Actor only ranges from 0º to 180º and drops down to -180º.**
 
 - **Once it reaches 180º, becoming -180º, -179º, -178º, etc, and for this specific reason, extra calculations are required to align both angles.**
 
@@ -120,17 +120,17 @@ protected:
 
   virtual void SetupInputComponent() override; // Usually called before BeginPlay() to set Player Input
 
-  // Where the magic happens
-  void CameraReset(float InDeltaTime);
+  void CameraReset(float InDeltaTime); // Where the magic happens
 
-  // Sets the bCameraReset to true
-  void SetCameraResetTrue();
+  void SetCameraResetTrue(); // Sets the bCameraReset to true
 
   /*
   * Make sure that you're using either this bCameraReset or the one within the .cpp file.
   * Remove the one that you're not using and keep the other one.
   * Remember that, if you intend this variable to be accessed by another Class outside of this one,
-  * then having it here is the better option. Plus if you need/want it exposed to Blueprints.
+  * then having it here is the only option.
+  * 
+  * Plus if you need/want it exposed to Blueprints, then keeping it here is also the correct option.
   * 
   */
   // UPROPERTY(BlueprintReadWrite, Category = "Camera")
@@ -213,33 +213,33 @@ void AYourClassName::SetupInputComponent()
 	}
 }
 
-// Part 2:: Important code here
+// Part 2: Important code here
 void AYourClassName::CameraReset(float InDeltaTime)
 {
   	/*
-	* This is one way of solving this problem
+	* This is one way of solving this problem.
     * Feel free to utilize a different solution!
 	* 
 	* Don't forget to share it if you feel comfortable with that! <3
 	*/
 
-  // First checks if the Paw has already spawned or not.
+  // First checks if the Pawn has already spawned or not.
   // Really important to avoid crashing.
 	if (GetPawn())
 	{
-    // Gets the Rotation Yaw and Rounds it (essentially, eliminating small decimental numbers like 0.123781f)
+    	// Gets the Rotation Yaw and Rounds it (essentially, eliminating small decimal numbers like 0.123781f).
 		float ActorRotationYaw = GetPawn()->GetActorRotation().Yaw;
 		ActorRotationYaw = FMath::RoundToFloat(ActorRotationYaw);
 
-    // Now gets the ControlRotation Pitch/Yaw
+    	// Now gets the ControlRotation Pitch/Yaw.
 		float CurrentControlRotationPitch = GetControlRotation().Pitch;
 		float CurrentControlRotationYaw = GetControlRotation().Yaw;
 
-    // Also rounds both values to remove extra decimenal numbers
-    CurrentControlRotationPitch = FMath::RoundToFloat(CurrentControlRotationPitch);
+    	// Also rounds both values to remove extra decimenal numbers.
+    	CurrentControlRotationPitch = FMath::RoundToFloat(CurrentControlRotationPitch);
 		CurrentControlRotationYaw = FMath::RoundToFloat(CurrentControlRotationYaw);
 
-    // Define and initialize an ErrorTolerance to be used later
+    	// Define and initialize an ErrorTolerance variable to be used later.
 		float ErrorTolerance = 1.0f;
 
     /*
@@ -257,13 +257,24 @@ void AYourClassName::CameraReset(float InDeltaTime)
 	* Here both Yaw's are being checked if they are nearly equal to each other.
 	* 
     * The error tolerance works this way:
-	* If the error tolerance is 1.0f
-    * And if CurrentControlRotationYaw is 200 and ActorRotationYaw is 199,
+	* 
+	* ErrorTolerance = 1.0f;
+	* 
+	* Consider CurrentControlRotationYaw is **X** and ActorRotationYaw is **Y**.
+	* If the difference between X and Y or Y and X is 1, then the statement is **true**.
+	* The difference is calculated by doing a simple subtraction (x - y) or (y - x).
+	* 
+    * Further example:
+	* If CurrentControlRotationYaw is 200 and ActorRotationYaw is 199,
 	* then this statement is **true**.
 	* 
-	* If the error tolerance is 2.0f , then 200 to 198 would make this statement as true.
+	* If the error tolerance is 2.0f, then 200 to 198 would make this statement as true.
 	* And if error tolerance is 3.0f, then 200 to 197 is true.
+	*
 	* So on and so forth.
+	* 
+	* Note: these values will never be negative, so you don't have to worry about that. 
+	* 
     */  
 		if (FMath::IsNearlyEqual(CurrentControlRotationYaw, ActorRotationYaw, ErrorTolerance))
 		{
