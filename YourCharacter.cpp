@@ -49,12 +49,6 @@ void AYourCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 			
 			if (UEnhancedInputLocalPlayerSubsystem* EILPS = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LP))
 			{
-				UInputMappingContext* IMC_Default;
-				UInputAction* IA_CameraReset = nullptr;
-
-				// NewObject here essentially creates an instance of this IMC (InputMappingContext) and assigns a memory address to it.
-				IMC_Default = NewObject<UInputMappingContext>(this, UInputMappingContext::StaticClass(), TEXT("IMC Default"));
-
 				if (IMC_Default)
 				{
 					// Sets the IMC_Default as the first Input Mapping Context.
