@@ -232,40 +232,25 @@ void AYourCharacter::SetCameraResetTrue()
 
 void AYourCharacter::MoveForward()
 {
-	// Find out which way is forward based on camera/controller
-	const FRotator Rotation = Controller->GetControlRotation();
-	const FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
-
 	const FVector DirectionForward = GetActorForwardVector();
 	AddMovementInput(DirectionForward, 1.0f);
 }
 
 void AYourCharacter::MoveLeft()
 {
-	// Find out which way is forward based on camera/controller
-	const FRotator Rotation = Controller->GetControlRotation();
-	const FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
-
 	const FVector DirectionLeft = GetActorRightVector();
 	AddMovementInput(DirectionLeft, -1.0f);
 }
 
 void AYourCharacter::MoveBackward()
 {
-	// Find out which way is forward based on camera/controller
-	const FRotator Rotation = Controller->GetControlRotation();
-	const FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
-
 	const FVector DirectionBackward = GetActorForwardVector();
 	AddMovementInput(DirectionBackward, -1.0f);
 }
 
 void AYourCharacter::MoveRight()
 {
-	// Find out which way is forward based on camera/controller
-	const FRotator Rotation = Controller->GetControlRotation();
-	const FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
-
 	const FVector DirectionRight = GetActorRightVector();
 	AddMovementInput(DirectionRight, 1.0f);
 }
+
