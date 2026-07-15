@@ -26,9 +26,9 @@ void AYourCharacter::Tick(float DeltaTime)
 	}
 }
 
-void AYourCharacter::SetupInputComponent(UInputComponent* PlayerInputComponent)
+void AYourCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	Super::SetupInputComponent(PlayerInputComponent);
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	// This is just a quick way of setting up a Key Binding.
 	// Make sure you're using a more robust system if you're actually building a game with this code!
