@@ -10,7 +10,7 @@ towards wherever the Actor is facing (if facing East, then east you go!).
 To further emphasize this, imagine the following:
 - The Character you are utilizing in-game is facing slightly towards left, towards a lake.
 - Your Camera (what you are seeing on screen) is pointing slightly towards right, let's say, to a nearby tree.
-- By tapping an Input (Keyboard/Gamepad/VR/Etc.) (Don't forget to setup this part too), the Camera essentially interpolates (through an RInterpTo) wihin a certain speed (that can be changed) towards the specific angle that the Character's facing.
+- By tapping an Input (Keyboard/Gamepad/VR/Etc.), the Camera essentially interpolates (through an RInterpTo) within a certain speed (that can be changed) towards the specific angle that the Character's facing.
 
 The code presented here allows you to choose the Pitch and/or Yaw. Usually the Control Rotation Pitch will be set to 0.0f, though you can easily swap it for the Actor Rotation Pitch, and also modify the Control Rotation Yaw towards the Actor Rotation Yaw.
 
@@ -26,7 +26,7 @@ Lastly, the **Control Rotation** as mentioned above, is basically the camera vie
 
 Once it reaches 180º, becoming -180º, -179º, -178º, etc, and for this specific reason, extra calculations are required to align both angles.
 
-**This is a bit hard to understand concept, 
+**This concept is kinda hard to understand, so... Feel free to ask any questions if you don't understand something! ❤️** 
 
 Further information on how these calculations 
 
