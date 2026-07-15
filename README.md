@@ -56,6 +56,9 @@ protected:
   // Where the magic happens
   void CameraReset(float InDeltaTime);
 
+  // Sets the bCameraReset to true
+  void SetCameraResetTrue();
+
   // Usually there's a variable here but you can also place it on top of the .cpp class if it's not gonna be used outside of this Classe's scope.
   // bCameraReset = false;
   
@@ -69,8 +72,13 @@ protected:
 
 #include "YourClassName.h"
 
+#include "EnhancedInputSubsystems.h"
+#include "EnhancedInputComponent.h"
+#include "InputMappingContext.h"
+#include "InputAction.h"
+
 // Comment or remove this variable if you intend to use the one within .h
-bCameraReset = false;
+bool bCameraReset = false;
 
 AYourClassName::AYourClassName()
 {
@@ -95,7 +103,40 @@ void AYourClassName::Tick(float DeltaTime)
 void AYourClassName::SetupInputComponent()
 {
 	Super::SetupInputComponent();
-  
+
+	// This is just a quick way of setting up a Key Binding.
+	// Make sure you're using a more robust system if you're actually building a game with this code!
+	if (ULocalPlayer* LocalPlayer = GetLocalPlayer())
+	{
+		if (EnhancedInputLocalPlayerSubsystem* EILPS = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer))
+		{
+			UInputMappingContext* IMC_Default;
+			UInputAction* IA_CameraReset;
+
+			// NewObject here essentially creates an instance of this IMC (InputMappingContext) and assigns a memory address to it.
+			IMC_Default = NewObject<UInputMappingContext>(this, UInputMappingContext::StaticClass(), TEXT("IMC Default"));
+
+			if (IMC_Default)
+			{
+				// Sets the IMC_Default as the first Input Mapping Context.
+				EILPS->AddMappingContext(IMC_Default, 0);
+
+				// Importantly verifies if the InputComponent (check InputComponent.h/.cpp for further information) is
+				// of the type 'EnhancedInputComponent', which is a more advanced version of the 'InputComponent'.
+				if (UEnhancedInputComponent* EIC = Cast<UEnhancedInputComponent>(InputComponent))
+				{
+					// Binds a key to a specific Input Action within the IMC.
+					// Note that EKeys could be any key on your keyboard, mouse, VR set, gamepad, phone, etc.
+					// Type EKeys:: within the editor and you'll see the whole list of possible Input Keys.
+					IMC_Default->MapKey(IA_CameraReset, EKeys::R);
+
+					// Lastly, sets InputAction within the Enhanced Input Component,
+					// with all the parameters defined above automatically.
+					EIC->BindAction(IA_CameraReset, ETriggerEvent::Started, this, &AYourClassName::SetCameraResetTrue);
+				}
+			}
+		}
+	}
 }
 
 // Part 2:: Important code here
@@ -103,11 +144,13 @@ void AYourClassName::CameraReset(float InDeltaTime)
 {
   	/*
 	* This is one way of solving this problem
-  * Feel free to utilize a different solution and share! <3
+    * Feel free to utilize a different solution!
+	* 
+	* Don't forget to share it if you feel comfortable with that! <3
 	*/
 
-  // First checks if the Paw has already spawned or not
-  // Really important to avoid crashing
+  // First checks if the Paw has already spawned or not.
+  // Really important to avoid crashing.
 	if (GetPawn())
 	{
     // Gets the Rotation Yaw and Rounds it (essentially, eliminating small decimental numbers like 0.123781f)
@@ -125,19 +168,24 @@ void AYourClassName::CameraReset(float InDeltaTime)
     // Define and initialize an ErrorTolerance to be used later
 		float ErrorTolerance = 1.0f;
 
-    /* Now checks if the Actor Rotation Yaw is below 180º
-    * This essentially means that this value is currently a negative value (somewhereb between 0 and -180)
-    * This calculation essentially removes that negative value and adds 180 on top of that
-    */ Then combined with the actual value of the Rotation Yaw, this number becomes 180 till 360
+    /*
+	* Now checks if the Actor Rotation Yaw is below 180º.
+    * This essentially means that this value is currently a negative value (somewhereb between 0 and -180).
+    * This calculation essentially removes that negative value and adds 180 on top of that.
+	* Then combined with the actual value of the Rotation Yaw, this number becomes 180 till 360.
+    */ 
 		if (ActorRotationYaw < 0.0f)
 		{
 			ActorRotationYaw = ActorRotationYaw + (180 * 2);
 		}
 
-    /* Here both Yaw's are being checked if they are nearly equal to each other, by an error tolerance
-    * The error tolerance (example, 1.0f) means that, if they are nearly equal each other by an extra 1.0f
-    * That is, if CurrentControlRotationYaw is 200 and ActorRotationYaw is 199, then this statement is 'true'
-    */ If the error tolerance would be 2.0f, then 200 to 198 would make this statement as true, but if it were 200 to 199 it would still be false
+    /*
+	* Here both Yaw's are being checked if they are nearly equal to each other, by an error tolerance.
+    * The error tolerance (example, 1.0f) means that, if they are nearly equal each other by an extra 1.0f.
+    * That is, if CurrentControlRotationYaw is 200 and ActorRotationYaw is 199, then this statement is 'true'.
+	* If the error tolerance would be 2.0f, then 200 to 198 would make this statement as true,
+	* but if it were 200 to 199 it would still be false.
+    */  
 		if (FMath::IsNearlyEqual(CurrentControlRotationYaw, ActorRotationYaw, ErrorTolerance))
 		{
       // The boolean that controls this whole logic is now false and this function will no longer be called.
@@ -152,6 +200,11 @@ void AYourClassName::CameraReset(float InDeltaTime)
 			//ControlRotation = FMath::RInterpConstantTo(GetControlRotation(), FRotator(0.0f, ActorRotationYaw, 0.0f), 1.0f, 10.0f);
 		}
 	}
+}
+
+void AYourClassName::SetCameraResetTrue()
+{
+	bCameraReset = true;
 }
 ```
 
