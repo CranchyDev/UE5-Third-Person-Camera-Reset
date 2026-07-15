@@ -2,11 +2,6 @@
 
 #include "YourPlayerController.h"
 
-#include "EnhancedInputSubsystems.h"
-#include "EnhancedInputComponent.h"
-#include "InputMappingContext.h"
-#include "InputAction.h"
-
 // Comment or remove this variable if you intend to use the one within .h
 bool bCameraReset = false;
 
@@ -38,19 +33,26 @@ void AYourPlayerController::SetupInputComponent()
 	// Make sure you're using a more robust system if you're actually building a game with this code!
 	if (ULocalPlayer* LocalPlayer = GetLocalPlayer())
 	{
-		if (EnhancedInputLocalPlayerSubsystem* EILPS = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer))
+		// If IMC_Default does not have any prior implementation from Blueprints then add them here.
+		if (IMC_Default == nullptr)
 		{
-			UInputMappingContext* IMC_Default;
-			UInputAction* IA_CameraReset;
-
 			// NewObject here essentially creates an instance of this IMC (InputMappingContext) and assigns a memory address to it.
 			IMC_Default = NewObject<UInputMappingContext>(this, UInputMappingContext::StaticClass(), TEXT("IMC Default"));
-
+		}
+		
+		if (EnhancedInputLocalPlayerSubsystem* EILPS = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer))
+		{
 			if (IMC_Default)
 			{
 				// Sets the IMC_Default as the first Input Mapping Context.
 				EILPS->AddMappingContext(IMC_Default, 0);
 
+				// Adds IA_Action if it wasn't previously setup from Blueprints
+				if (IA_CameraReset == nullptr)
+				{
+					IA_CameraReset = NewObject<UInputAction>(this, UInputAction::StaticClass(), TEXT("R"));
+				}
+				
 				// Importantly verifies if the InputComponent (check InputComponent.h/.cpp for further information) is
 				// of the type 'EnhancedInputComponent', which is a more advanced version of the 'InputComponent'.
 				if (UEnhancedInputComponent* EIC = Cast<UEnhancedInputComponent>(InputComponent))
@@ -99,7 +101,7 @@ void AYourPlayerController::CameraReset(float InDeltaTime)
 		float ErrorTolerance = 1.0f;
 
 		/*
-		* Now checks if the Actor Rotation Yaw is below 180บ.
+		* Now checks if the Actor Rotation Yaw is below 180ยบ.
 		* This essentially means that this value is currently a negative value (somwhere between 0 and -180).
 		* This calculation essentially removes that negative value and adds 180 on top of that.
 		* Then combined with the actual value of the Rotation Yaw, this number becomes 180 till 360.
