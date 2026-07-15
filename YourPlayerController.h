@@ -4,12 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "YourPlayerController.generated.h"
 
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "InputMappingContext.h"
 #include "InputAction.h"
+
+#include "YourPlayerController.generated.h"
 
 /**
  * 
