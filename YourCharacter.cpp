@@ -145,10 +145,12 @@ void AYourCharacter::CameraReset(float InDeltaTime)
 		else
 		{
 			// And for as long as bCameraReset is 'true', then this logic will run
-			GetController()->ControlRotation = FMath::RInterpTo(GetControlRotation(), FRotator(0.0f, ActorRotationYaw, 0.0f), InDeltaTime, 10.0f);
+			FRotator RotateToThis = FMath::RInterpTo(GetControlRotation(), FRotator(0.0f, ActorRotationYaw, 0.0f), InDeltaTime, 10.0f);
+			GetController()->SetControlRotation(RotateToThis);
 
 			// Alternative with a Constant Interpolation Speed instead of Strong Start/Ease Out
-			// GetController()->ControlRotation = FMath::RInterpConstantTo(GetControlRotation(), FRotator(0.0f, ActorRotationYaw, 0.0f), 1.0f, 10.0f);
+			// FRotator RotaToThisInstead = FMath::RInterpConstantTo(GetControlRotation(), FRotator(0.0f, ActorRotationYaw, 0.0f), 1.0f, 10.0f);
+			// GetController()->SetControlRotation(RotateToThis);
 		}
 	}
 }
