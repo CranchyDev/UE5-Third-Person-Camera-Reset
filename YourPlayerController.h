@@ -19,6 +19,8 @@ UCLASS()
 class YOURPROJECT_API AYourPlayerController : public APlayerController
 {
 	GENERATED_BODY()
+
+	AYourPlayerController(); // Default constructor
 	
 	virtual void Tick(float DeltaTime) override; // Ticks every frame
 
