@@ -18,17 +18,17 @@ Since not everyone works with C++, I left a Blueprint version of the same code w
 
 Lastly, the **Control Rotation** as mentioned above, is basically the camera view that the player has in-game. 
 
-**Both Pitch and Yaw range from 0º to 360º and have no negative values.** 
+- **Both Pitch and Yaw range from 0º to 360º and have no negative values.** 
 
-**This works fundamentally different from the Actor Rotation.**
+- **This works fundamentally different from the Actor Rotation.**
 
-**The rotation of an Actor only ranges from 0º to 180º and drops down to -180º.**
+- **The rotation of an Actor only ranges from 0º to 180º and drops down to -180º.**
 
-Once it reaches 180º, becoming -180º, -179º, -178º, etc, and for this specific reason, extra calculations are required to align both angles.
+- **Once it reaches 180º, becoming -180º, -179º, -178º, etc, and for this specific reason, extra calculations are required to align both angles.**
 
-**This concept is kinda hard to understand, so... Feel free to ask any questions if you don't understand something! ❤️** 
+This concept is kinda hard to understand, so... Feel free to ask any questions if you don't understand something! ❤️
 
-Further information on how these calculations 
+Further information on how these calculations are implemented, can be found within the corresponding files of this repository.
 
 ## How to implement
 
