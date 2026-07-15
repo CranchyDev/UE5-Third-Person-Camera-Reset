@@ -39,6 +39,8 @@ Further information on how these calculations
 
 **Check the corresponding files within this repository.**
 
+<hr>
+
 #### **Short Code template if you're in a hurry ;)**
 
 ##### **YourClassName.cpp**
