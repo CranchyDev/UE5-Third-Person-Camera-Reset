@@ -74,8 +74,7 @@ void AYourClassName::CameraReset(float InDeltaTime)
 	}
 }
 ```
-
-**YourClassName.cpp**
+<hr>
 
 **Long code template if you want or need the extra explanations**
 
