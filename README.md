@@ -34,11 +34,14 @@ Further information on how these calculations
 
 ### C++
 
-Copy&Paste:
 
-**Short Code template if you're in a hurry ;)**
+**I am assuming that you are utilizing a PlayerController for this code. If using Character instead, some parts of the setup are a bit different.**
 
-**YourClassName.cpp**
+**Check the corresponding files within this repository.**
+
+#### **Short Code template if you're in a hurry ;)**
+
+##### **YourClassName.cpp**
 
 ```cpp
 void AYourClassName::CameraReset(float InDeltaTime)
@@ -76,9 +79,9 @@ void AYourClassName::CameraReset(float InDeltaTime)
 ```
 <hr>
 
-**Long code template if you want or need the extra explanations**
+#### **Long code template if you want or need the extra explanations**
 
-**YourClassName.h**
+##### **YourClassName.h**
 
 **Please don't forget to change the name of the Class from this code. It's probably not 'YourClassName', I guess?**
 
@@ -131,7 +134,7 @@ protected:
 };
 ```
 
-**YourClassName.cpp**
+##### **YourClassName.cpp**
 
 ```cpp
 // Fill out your copyright notice in the Description page of Project Settings.
