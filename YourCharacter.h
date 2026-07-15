@@ -27,7 +27,7 @@ protected:
 
 	virtual void BeginPlay() override; // Called after Class is spawned in the world
 
-	virtual void SetupInputComponent(UInputComponent* PlayerInputComponent) override; // Usually called before BeginPlay() to set Player Input
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override; // Usually called before BeginPlay() to set Player Input
 
 	// Where the magic happens
 	void CameraReset(float InDeltaTime); 
