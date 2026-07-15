@@ -4,20 +4,80 @@ Short and simple Camera Reset mechanic that modifies the Control Rotation Yaw to
 ## Introduction
 Hi! Welcome to yet another one of my repositories!
 
-This time, I present to you a very "simple" (this wasn't so simple when I had to stay up till 03:00AM though) that resets the Control Rotation (will explain what this is in a bit), towards wherever the Actor's Rotation that the camera is attached to is.
-In other words, if the Character you are utilizing in-game is facing slightly towards left of where your Camera point of view is actually pointing, meaning that, the Character isn't facing the same direction as the Camera, then, hopefully, by tapping an Input (Keyboard/Gamepad/VR/Etc.), the Camera essentially interpolates wihin a certain speed towards the specific angle that the Character's facing.
+This time, I present to you a very "simple" Camera Reset mechanic/feature (this wasn't so simple when I had to stay up till 03:00AM though) that, basically, sets the Control Rotation (will explain what this is in a bit), 
+towards wherever the Actor is facing (if facing East, then east you go!).
 
-The code presented here allows you to choose the Pitch and/or Yaw. Usually the ControlRotation.Pitch will be set to 0.0f, though you can easily swap it for the Actor Rotation Pitch, and also modify the ControlRotation.Yaw towards the ActorRotation.Yaw.
+To further emphasize this, imagine the following:
+- The Character you are utilizing in-game is facing slightly towards left, towards a lake.
+- Your Camera (what you are seeing on screen) is pointing slightly towards right, let's say, to a nearby tree.
+- By tapping an Input (Keyboard/Gamepad/VR/Etc.) (Don't forget to setup this part too), the Camera essentially interpolates (through an RInterpTo) wihin a certain speed (that can be changed) towards the specific angle that the Character's facing.
 
-Since not everyone works with C++ I left a Blueprint version of the same code with some tweaks to better accommodate to the Blueprint environment.
+The code presented here allows you to choose the Pitch and/or Yaw. Usually the Control Rotation Pitch will be set to 0.0f, though you can easily swap it for the Actor Rotation Pitch, and also modify the Control Rotation Yaw towards the Actor Rotation Yaw.
 
-Lastly, the **Control Rotation** as mentioned above, is basically the camera view that the player has in-game. Both Pitch and Yaw range from 0º to 360º and have no negative values. This works fundamentally different from the Actor Rotation whereas the latter goes from 0º to 180º and to -180º. For that specific reason, extra calculations are required to align both angles. Further information on how these calculations are done, presented in the code.
+Since not everyone works with C++, I left a Blueprint version of the same code with some tweaks to better accommodate to the Blueprint environment.
+
+Lastly, the **Control Rotation** as mentioned above, is basically the camera view that the player has in-game. 
+
+**Both Pitch and Yaw range from 0º to 360º and have no negative values.** 
+
+**This works fundamentally different from the Actor Rotation.**
+
+**The rotation of an Actor only ranges from 0º to 180º and drops down to -180º.**
+
+Once it reaches 180º, becoming -180º, -179º, -178º, etc, and for this specific reason, extra calculations are required to align both angles.
+
+**This is a bit hard to understand concept, 
+
+Further information on how these calculations 
 
 ## How to implement
 
 ### C++
 
 Copy&Paste:
+
+**Short Code template if you're in a hurry ;)**
+
+**YourClassName.cpp**
+
+```cpp
+void AYourClassName::CameraReset(float InDeltaTime)
+{
+	if (GetPawn())
+	{
+		float ActorRotationYaw = GetPawn()->GetActorRotation().Yaw;
+		ActorRotationYaw = FMath::RoundToFloat(ActorRotationYaw);
+
+		float CurrentControlRotationPitch = GetControlRotation().Pitch;
+		float CurrentControlRotationYaw = GetControlRotation().Yaw;
+
+    	CurrentControlRotationPitch = FMath::RoundToFloat(CurrentControlRotationPitch);
+		CurrentControlRotationYaw = FMath::RoundToFloat(CurrentControlRotationYaw);
+
+		float ErrorTolerance = 1.0f;
+
+		if (ActorRotationYaw < 0.0f)
+		{
+			ActorRotationYaw = ActorRotationYaw + (180 * 2);
+		}
+
+		if (FMath::IsNearlyEqual(CurrentControlRotationYaw, ActorRotationYaw, ErrorTolerance))
+		{
+			bCameraReset = false; // Sets to false to prevent 'Tick' from triggering this function any further
+		}
+		else
+		{
+			ControlRotation = FMath::RInterpTo(GetControlRotation(), FRotator(0.0f, ActorRotationYaw, 0.0f), InDeltaTime, 10.0f);
+			// Alternative with a Constant Interpolation Speed instead of Strong Start/Ease Out
+			// ControlRotation = FMath::RInterpConstantTo(GetControlRotation(), FRotator(0.0f, ActorRotationYaw, 0.0f), 1.0f, 10.0f);
+		}
+	}
+}
+```
+
+**YourClassName.cpp**
+
+**Long code template if you want or need the extra explanations**
 
 **YourClassName.h**
 
