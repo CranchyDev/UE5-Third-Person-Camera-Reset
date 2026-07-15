@@ -3,11 +3,6 @@
 
 #include "YourCharacter.h"
 
-#include "EnhancedInputSubsystems.h"
-#include "EnhancedInputComponent.h"
-#include "InputMappingContext.h"
-#include "InputAction.h"
-
 // Comment or remove this variable if you intend to use the one within .h
 bool bCameraReset = false;
 
@@ -107,7 +102,7 @@ void AYourCharacter::CameraReset(float InDeltaTime)
 		float ErrorTolerance = 1.0f;
 
 		/*
-		* Now checks if the Actor Rotation Yaw is below 180บ.
+		* Now checks if the Actor Rotation Yaw is below 180ยบ.
 		* This essentially means that this value is currently a negative value (somewhere between 0 and -180).
 		* This calculation essentially removes that negative value and adds 180 on top of that.
 		* Then combined with the actual value of the Rotation Yaw, this number becomes 180 till 360.
