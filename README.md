@@ -168,7 +168,7 @@ void AYourClassName::BeginPlay()
 // Part 1: Important code here
 void AYourClassName::Tick(float DeltaTime)
 {
-	if (bResetCamera)
+	if (bCameraReset)
 	{
 		CameraReset(DeltaTime);
 	}
