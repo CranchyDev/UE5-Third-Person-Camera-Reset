@@ -34,15 +34,17 @@ Further information on how these calculations
 
 ### C++
 
-
-**I am assuming that you are utilizing a PlayerController for this code. If using Character instead, some parts of the setup are a bit different.**
-
-**Check the corresponding files within this repository.**
+> [!NOTE]
+> **I am assuming that you are utilizing a PlayerController for this code. If using Character instead, some parts of the setup are a bit different.**
+> **Check the corresponding files within this repository.**
+> 
+> **Also make sure to change YOURPROJECT_API to THENAMEOFYOURPROJECT_API**
+> 
+> **And change YourClassName to the name of your Class.**
 
 <hr>
 
-> [!NOTE]
-> #### **Short Code template if you're in a hurry ;)**
+#### **Short Code template if you're in a hurry ;)**
 
 ##### **YourClassName.cpp**
 
