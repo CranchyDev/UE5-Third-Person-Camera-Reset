@@ -8,7 +8,9 @@
 
 // Needed for the ACharacter::Jump() function to be called
 #include "GameFramework/Character.h"
-
+	
+// Comment this if you want to use it as a variable within .h.
+// Keeping it makes it useful ONLY for this class and nowhere else.
 bool bCameraReset = false;
 
 AYourPlayerController::AYourPlayerController()
