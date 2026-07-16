@@ -2,31 +2,41 @@
 
 #pragma once
 
+// These are base #include that come with the creation of this class.
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 
+// These must be included for IMC and IA to work.
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "InputMappingContext.h"
 #include "InputAction.h"
 
+// Class generated file, crucial for this class to be functional.
+// Also part of the base #include but this MUST be the last 
+// otherwise the program won't compile.
 #include "YourPlayerController.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class YOURPROJECT_API AYourPlayerController : public APlayerController
+class SAMPLEPROJECT_5_8_C_API AYourPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
-	AYourPlayerController(); // Default constructor
-	
-	virtual void Tick(float DeltaTime) override; // Ticks every frame
+protected:
+	// Default constructor
+	AYourPlayerController(); 
 
-	virtual void BeginPlay() override; // Called after Class is spawned in the world
+	// Called after object from this class has spawned
+	virtual void BeginPlay() override; 
 
-	virtual void SetupInputComponent() override; // Usually called before BeginPlay() to set Player Input
+	// Called every frame
+	virtual void Tick(float DeltaTime) override; 
+
+	// Usually called before BeginPlay() to setup Player Input
+	virtual void SetupInputComponent() override;
 
 	// Where the magic happens
 	void CameraReset(float InDeltaTime);
@@ -34,25 +44,32 @@ class YOURPROJECT_API AYourPlayerController : public APlayerController
 	// Sets the bCameraReset to true
 	void SetCameraResetTrue();
 
-	/*
-	* Make sure that you're using either this bCameraReset or the one within the .cpp file.
-	* Remove the one that you're not using and keep the other one.
-	* Remember that, if you intend this variable to be accessed by another Class outside of this one,
-	* then having it here is the only option.
-	*
-	* Plus if you need/want it exposed to Blueprints, then keeping it here is also the correct option.
-	*
-	*/
+	// Movement Function
+	void Move(const FInputActionValue& Value);
 
-	// UPROPERTY(BlueprintReadWrite, Category = "Camera")
-	// bool bCameraReset = false;
+	// Look Function (to rotate Camera)
+	void Look(const FInputActionValue& Value);
 
-	// If this IMC (InputMappingContext) isn't defaulted within the Editor, 
-	// you MUST instantiate it within the .cpp file.
+	// Jump Function (Yay! Jumping!)
+	void Jump(const FInputActionValue& Value);
+
+	// InputMappingContext that's going to be used for Player Input
 	UPROPERTY(EditAnywhere, Category = "Input")
-	UInputMappingContext* IMC_Default;
+	UInputMappingContext* IMC_Default = nullptr;
 
-	// Same goes here for this IA (InputAction).
+	// InputAction for CameraReset
 	UPROPERTY(EditAnywhere, Category = "Input")
-	UInputAction* IA_CameraReset;
+	UInputAction* IA_CameraReset = nullptr;
+
+	// InputAction for Movement
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* IA_Move = nullptr;
+
+	// InputAction for Camera Rotation
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* IA_Look = nullptr;
+
+	// InputAction for Jump (because why not, I love Jumping() in games!)
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* IA_Jump = nullptr;
 };
