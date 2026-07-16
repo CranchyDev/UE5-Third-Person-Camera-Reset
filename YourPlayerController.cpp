@@ -1,8 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+
 #include "YourPlayerController.h"
 
-// Comment or remove this variable if you intend to use the one within .h
+// Used specifically to call UEnhancedInputLibrary::RequestRebuildControlMappingsUsingContext
+#include "EnhancedInputLibrary.h"
+
+// Needed for the ACharacter::Jump() function to be called
+#include "GameFramework/Character.h"
+
 bool bCameraReset = false;
 
 AYourPlayerController::AYourPlayerController()
@@ -13,10 +19,8 @@ AYourPlayerController::AYourPlayerController()
 void AYourPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
-// Part 1: Important code here
 void AYourPlayerController::Tick(float DeltaTime)
 {
 	if (bCameraReset)
@@ -29,42 +33,122 @@ void AYourPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	// This is just a quick way of setting up a Key Binding.
-	// Make sure you're using a more robust system if you're actually building a game with this code!
-	if (ULocalPlayer* LocalPlayer = GetLocalPlayer())
+	/*
+	* Not heavily documenting this as it is not the nature of the Camera Reset mechanic.
+	* 
+	* Still leaving some comments here but moreover for future self me.
+	*/
+	if (IsLocalPlayerController())
 	{
-		// If IMC_Default does not have any prior implementation from Blueprints then add them here.
-		if (IMC_Default == nullptr)
+		if (UEnhancedInputLocalPlayerSubsystem* EILPlayerSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 		{
-			// NewObject here essentially creates an instance of this IMC (InputMappingContext) and assigns a memory address to it.
-			IMC_Default = NewObject<UInputMappingContext>(this, UInputMappingContext::StaticClass(), TEXT("IMC Default"));
-		}
-		
-		if (UEnhancedInputLocalPlayerSubsystem* EILPS = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer))
-		{
-			if (IMC_Default)
+			if (UEnhancedInputComponent* EIC = Cast<UEnhancedInputComponent>(InputComponent))
 			{
-				// Sets the IMC_Default as the first Input Mapping Context.
-				EILPS->AddMappingContext(IMC_Default, 0);
-
-				// Adds IA_Action if it wasn't previously setup from Blueprints
-				if (IA_CameraReset == nullptr)
+				if (IMC_Default == nullptr)
 				{
-					IA_CameraReset = NewObject<UInputAction>(this, UInputAction::StaticClass(), TEXT("R"));
-				}
-				
-				// Importantly verifies if the InputComponent (check InputComponent.h/.cpp for further information) is
-				// of the type 'EnhancedInputComponent', which is a more advanced version of the 'InputComponent'.
-				if (UEnhancedInputComponent* EIC = Cast<UEnhancedInputComponent>(InputComponent))
-				{
-					// Binds a key to a specific Input Action within the IMC.
-					// Note that EKeys could be any key on your keyboard, mouse, VR set, gamepad, phone, etc.
-					// Type EKeys:: within the editor and you'll see the whole list of possible Input Keys.
-					IMC_Default->MapKey(IA_CameraReset, EKeys::R);
+					IMC_Default = NewObject<UInputMappingContext>(this, UInputMappingContext::StaticClass(), TEXT("IMC_Default"));
+					IA_CameraReset = NewObject<UInputAction>(this, UInputAction::StaticClass(), TEXT("IA_CameraReset"));
+					IA_Move = NewObject<UInputAction>(this, UInputAction::StaticClass(), TEXT("IA_Move"));
+					IA_Look = NewObject<UInputAction>(this, UInputAction::StaticClass(), TEXT("IA_Look"));
+					IA_Jump = NewObject<UInputAction>(this, UInputAction::StaticClass(), TEXT("IA_Jump"));
 
-					// Lastly, sets InputAction within the Enhanced Input Component,
-					// with all the parameters defined above automatically.
+					// Mapping IA_CameraReset first.
+					// Every InputAction is a boolean (Digital) by default, so we don't have to set ValueType like in other Keys.
+					// We do have to, however, define which Key is going to trigger this IA
+					IA_CameraReset->ValueType = EInputActionValueType::Boolean;
+
+					FEnhancedActionKeyMapping& MapKeyReset = IMC_Default->MapKey(IA_CameraReset, EKeys::R);
+
+					UInputModifierNegate* NegateReset = NewObject<UInputModifierNegate>(IA_CameraReset);
+
+					NegateReset->bX = false;
+					NegateReset->bY = false;
+					NegateReset->bZ = false;
+
+					MapKeyReset.Modifiers.AddUnique(NegateReset);
+
+					// And now we BindAction onto the EnhancedInputComponent that we initialized previously.
 					EIC->BindAction(IA_CameraReset, ETriggerEvent::Started, this, &AYourPlayerController::SetCameraResetTrue);
+
+					// Now mapping Keys to IA_Move 
+					// Starting with defining the IA_Move ValueType (importantly to Axis2D).
+					IA_Move->ValueType = EInputActionValueType::Axis2D;
+
+					// MapKeyW Setup
+					FEnhancedActionKeyMapping& MapKeyW = IMC_Default->MapKey(IA_Move, EKeys::W);
+					UInputModifierSwizzleAxis* SwizzleAxisW = NewObject<UInputModifierSwizzleAxis>(IA_Move);
+
+					SwizzleAxisW->Order = EInputAxisSwizzle::YXZ;
+
+					MapKeyW.Modifiers.AddUnique(SwizzleAxisW);
+
+					// MapKeyA Setup
+					FEnhancedActionKeyMapping& MapKeyA = IMC_Default->MapKey(IA_Move, EKeys::A);
+					UInputModifierNegate* NegateA = NewObject<UInputModifierNegate>(IA_Move);
+
+					NegateA->bX = true;
+					NegateA->bY = true;
+					NegateA->bZ = true;
+
+					MapKeyA.Modifiers.AddUnique(NegateA);
+
+					// MapKeyS Setup
+					FEnhancedActionKeyMapping& MapKeyS = IMC_Default->MapKey(IA_Move, EKeys::S);
+					UInputModifierSwizzleAxis* SwizzleAxisS = NewObject<UInputModifierSwizzleAxis>(IA_Move);
+					UInputModifierNegate* NegateS = NewObject<UInputModifierNegate>(IA_Move);
+
+					SwizzleAxisS->Order = EInputAxisSwizzle::YXZ;
+
+					NegateS->bX = true;
+					NegateS->bY = true;
+					NegateS->bZ = true;
+
+					MapKeyS.Modifiers.AddUnique(SwizzleAxisS);
+					MapKeyS.Modifiers.AddUnique(NegateS);
+
+					FEnhancedActionKeyMapping& MapKeyD = IMC_Default->MapKey(IA_Move, EKeys::D);
+
+					EIC->BindAction(IA_Move, ETriggerEvent::Triggered, this, &AYourPlayerController::Move);
+
+					// Now setting IA_Look
+					// Importantly setting IA_Look ValueType to Axis2D first once again.
+					IA_Look->ValueType = EInputActionValueType::Axis2D;
+
+					FEnhancedActionKeyMapping& MapKeyLook = IMC_Default->MapKey(IA_Look, EKeys::Mouse2D);
+
+					UInputModifierNegate* NegateLook = NewObject<UInputModifierNegate>(IA_Look);
+
+					NegateLook->bX = false;
+					NegateLook->bY = true;
+					NegateLook->bZ = false;
+
+					MapKeyLook.Modifiers.AddUnique(NegateLook);
+
+					EIC->BindAction(IA_Look, ETriggerEvent::Triggered, this, &AYourPlayerController::Look);
+
+					// Lastly setting IA_Jump
+					// Once more, the default value is boolean (Digital), so we only need to use MapKey and BindAction.
+					FEnhancedActionKeyMapping& MapKeyJump = IMC_Default->MapKey(IA_Jump, EKeys::SpaceBar);
+
+					EIC->BindAction(IA_Jump, ETriggerEvent::Started, this, &AYourPlayerController::Jump);
+
+					// Sets the IMC_Default as the first Input Mapping Context.
+					EILPlayerSubsystem->AddMappingContext(IMC_Default, 0);
+				}
+				else
+				{
+					EIC->BindAction(IA_CameraReset, ETriggerEvent::Started, this, &AYourPlayerController::SetCameraResetTrue);
+					EIC->BindAction(IA_Move, ETriggerEvent::Triggered, this, &AYourPlayerController::Move);
+					EIC->BindAction(IA_Look, ETriggerEvent::Triggered, this, &AYourPlayerController::Look);
+					EIC->BindAction(IA_Jump, ETriggerEvent::Started, this, &AYourPlayerController::Jump);
+
+					// Before AddMappingContext, we force the IMC to reconstruct all the new existing Mappings.
+					// Not mandatory, but leaving it here just in case.
+					UEnhancedInputLibrary::RequestRebuildControlMappingsUsingContext(IMC_Default);
+
+					// Finally sets the IMC_Default as the first Input Mapping Context.
+					// We are now ready to utilize it!
+					EILPlayerSubsystem->AddMappingContext(IMC_Default, 0);
 				}
 			}
 		}
@@ -72,13 +156,16 @@ void AYourPlayerController::SetupInputComponent()
 }
 
 // Part 2: Important code here
+// Must called only from 'Tick'.
 void AYourPlayerController::CameraReset(float InDeltaTime)
 {
 	/*
+	* ---------------------------------------------------------------
 	* This is one way of solving this problem.
 	* Feel free to utilize a different solution!
 	*
 	* Don't forget to share it if you feel comfortable with that! <3
+	* ---------------------------------------------------------------
 	*/
 
 	// First checks if the Pawn has already spawned or not.
@@ -101,10 +188,12 @@ void AYourPlayerController::CameraReset(float InDeltaTime)
 		float ErrorTolerance = 1.0f;
 
 		/*
+		* --------------------------------------------------------------------------------------------------
 		* Now checks if the Actor Rotation Yaw is below 180º.
-		* This essentially means that this value is currently a negative value (somwhere between 0 and -180).
+		* This essentially means that this value is currently a negative value (somewhere between 0 and -180).
 		* This calculation essentially removes that negative value and adds 180 on top of that.
 		* Then combined with the actual value of the Rotation Yaw, this number becomes 180 till 360.
+		* --------------------------------------------------------------------------------------------------
 		*/
 		if (ActorRotationYaw < 0.0f)
 		{
@@ -112,19 +201,20 @@ void AYourPlayerController::CameraReset(float InDeltaTime)
 		}
 
 		/*
+		* ----------------------------------------------------------------------------------
 		* Here both Yaw's are being checked if they are nearly equal to each other.
 		*
 		* The error tolerance works this way:
 		*
-		* ErrorTolerance = 1.0f;
+		* Consider ErrorTolerance = 1.0f;
 		*
-		* Consider CurrentControlRotationYaw is **X** and ActorRotationYaw is **Y**.
-		* If the difference between X and Y or Y and X is 1, then the statement is **true**.
+		* Consider CurrentControlRotationYaw is X and ActorRotationYaw is Y.
+		* If the difference between X and Y or Y and X is 1, then the statement is true.
 		* The difference is calculated by doing a simple subtraction (x - y) or (y - x).
 		*
 		* Further example:
 		* If CurrentControlRotationYaw is 200 and ActorRotationYaw is 199,
-		* then this statement is **true**.
+		* then this statement is true.
 		*
 		* If the error tolerance is 2.0f, then 200 to 198 would make this statement as true.
 		* And if error tolerance is 3.0f, then 200 to 197 is true.
@@ -132,7 +222,7 @@ void AYourPlayerController::CameraReset(float InDeltaTime)
 		* So on and so forth.
 		*
 		* Note: these values will never be negative, so you don't have to worry about that.
-		*
+		* ----------------------------------------------------------------------------------
 		*/
 		if (FMath::IsNearlyEqual(CurrentControlRotationYaw, ActorRotationYaw, ErrorTolerance))
 		{
@@ -152,5 +242,71 @@ void AYourPlayerController::CameraReset(float InDeltaTime)
 
 void AYourPlayerController::SetCameraResetTrue()
 {
+	UE_LOG(LogTemp, Warning, TEXT("SetCameraResetTrue is being called."));
+	for (const FEnhancedActionKeyMapping& Mapping : IMC_Default->GetMappings())
+	{
+		UE_LOG(LogTemp, Warning,
+			TEXT("%s -> %s"),
+			*Mapping.Key.ToString(),
+			*Mapping.Action->GetName());
+	}
+
+	for (const FEnhancedActionKeyMapping& Mapping : IMC_Default->GetMappings())
+	{
+		UE_LOG(LogTemp, Warning,
+			TEXT("%s Modifiers: %d"),
+			*Mapping.Key.ToString(),
+			Mapping.Modifiers.Num());
+	}
 	bCameraReset = true;
+}
+
+void AYourPlayerController::Move(const FInputActionValue& Value)
+{
+	// Letting this small check exist here just in case there's currently no possessed Pawn
+	if (!GetPawn())
+	{
+		return;
+	}
+
+	// Get and set certain values to define where the Player Character moves
+	const FVector2D WhereToMove = Value.Get<FVector2D>();
+	const FRotator LookYawRotation(0.0f, GetControlRotation().Yaw, 0.0f);
+	const FVector ForwardBackDirection = FRotationMatrix(LookYawRotation).GetUnitAxis(EAxis::Y);
+	const FVector LeftRightDirection = FRotationMatrix(LookYawRotation).GetUnitAxis(EAxis::X);
+
+	// Importantly verifies if the Input Value isn't zero to avoid running the code unnecessarily
+	// Is this what it's actually preventing? :thinking:
+	if (Value.IsNonZero())
+	{
+		GetPawn()->AddMovementInput(ForwardBackDirection, WhereToMove.X);
+		GetPawn()->AddMovementInput(LeftRightDirection, WhereToMove.Y);
+	}
+}
+
+void AYourPlayerController::Look(const FInputActionValue& Value)
+{
+	// Vector2D: X is Mouse X (Yaw), Y is Mouse Y (Pitch)
+	const FVector2D LookAxisValue = Value.Get<FVector2D>();
+
+	// Add Yaw (Left/Right)
+	AddYawInput(LookAxisValue.X);
+
+	// Add Pitch (Up/Down)
+	AddPitchInput(LookAxisValue.Y);
+}
+
+void AYourPlayerController::Jump(const FInputActionValue& Value)
+{
+	if (!GetPawn())
+	{
+		return;
+	}
+
+	ACharacter* PlayerCharacter = Cast<ACharacter>(GetPawn());
+
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->Jump();
+	}
 }
