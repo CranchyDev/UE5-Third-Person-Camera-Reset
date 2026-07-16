@@ -242,22 +242,6 @@ void AYourPlayerController::CameraReset(float InDeltaTime)
 
 void AYourPlayerController::SetCameraResetTrue()
 {
-	UE_LOG(LogTemp, Warning, TEXT("SetCameraResetTrue is being called."));
-	for (const FEnhancedActionKeyMapping& Mapping : IMC_Default->GetMappings())
-	{
-		UE_LOG(LogTemp, Warning,
-			TEXT("%s -> %s"),
-			*Mapping.Key.ToString(),
-			*Mapping.Action->GetName());
-	}
-
-	for (const FEnhancedActionKeyMapping& Mapping : IMC_Default->GetMappings())
-	{
-		UE_LOG(LogTemp, Warning,
-			TEXT("%s Modifiers: %d"),
-			*Mapping.Key.ToString(),
-			Mapping.Modifiers.Num());
-	}
 	bCameraReset = true;
 }
 
