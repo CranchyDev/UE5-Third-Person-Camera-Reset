@@ -136,6 +136,9 @@ void AMyPlayerController::CameraReset(float InDeltaTime)
 #### Step 3:
 <img width="1860" height="863" alt="Screenshot3" src="https://github.com/user-attachments/assets/7741ecf0-d833-47d8-a4a5-14e81f12e8b4" />
 
+#### Step 4:
+<img width="1241" height="545" alt="Screenshot4" src="https://github.com/user-attachments/assets/29e67dfc-3c96-4eef-afd7-f809c1e0a356" />
+
 
 ## Conclusion & Notes
 
