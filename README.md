@@ -55,13 +55,24 @@ Further information on how these calculations are implemented, can be found with
 
 <hr>
 
-#### **Short Code template if you're in a hurry ;)**
+### **Short Code template if you're in a hurry ;)**
 
-##### **YourPlayerController.cpp**
+#### **MyPlayerController.cpp**
 
 ```cpp
-void AYourPlayerController::CameraReset(float InDeltaTime)
+// Must called only from 'Tick'.
+void AMyPlayerController::CameraReset(float InDeltaTime)
 {
+	///
+	// ---------------------------------------------------------------
+	// This is one way of solving this problem.
+	//
+	// Feel free to utilize a different solution!
+	//
+	// Don't forget to share it if you feel comfortable with that! <3
+	// ---------------------------------------------------------------
+	///
+
 	if (GetPawn())
 	{
 		float ActorRotationYaw = GetPawn()->GetActorRotation().Yaw;
@@ -70,25 +81,26 @@ void AYourPlayerController::CameraReset(float InDeltaTime)
 		float CurrentControlRotationPitch = GetControlRotation().Pitch;
 		float CurrentControlRotationYaw = GetControlRotation().Yaw;
 
-    	CurrentControlRotationPitch = FMath::RoundToFloat(CurrentControlRotationPitch);
+		CurrentControlRotationPitch = FMath::RoundToFloat(CurrentControlRotationPitch);
 		CurrentControlRotationYaw = FMath::RoundToFloat(CurrentControlRotationYaw);
 
 		float ErrorTolerance = 1.0f;
 
 		if (ActorRotationYaw < 0.0f)
 		{
-			ActorRotationYaw = ActorRotationYaw + (180 * 2);
+			ActorRotationYaw = ActorRotationYaw + 360; // Or (180 * 2), achieves the same result.
 		}
 
 		if (FMath::IsNearlyEqual(CurrentControlRotationYaw, ActorRotationYaw, ErrorTolerance))
 		{
+			// The boolean that controls this whole logic is now false and this function will no longer be called.
 			bCameraReset = false; // Sets to false to prevent 'Tick' from triggering this function any further
 		}
 		else
 		{
-			ControlRotation = FMath::RInterpTo(GetControlRotation(), FRotator(0.0f, ActorRotationYaw, 0.0f), InDeltaTime, 10.0f);
-			// Alternative with a Constant Interpolation Speed instead of Strong Start/Ease Out
-			// ControlRotation = FMath::RInterpConstantTo(GetControlRotation(), FRotator(0.0f, ActorRotationYaw, 0.0f), 1.0f, 10.0f);
+			ControlRotation = FMath::RInterpTo(GetControlRotation(), FRotator(0.0f, ActorRotationYaw, 0.0f), InDeltaTime, InterpSpeed);
+
+			// ControlRotation = FMath::RInterpConstantTo(GetControlRotation(), FRotator(0.0f, ActorRotationYaw, 0.0f), InDeltaTime, InterpSpeed);
 		}
 	}
 }
