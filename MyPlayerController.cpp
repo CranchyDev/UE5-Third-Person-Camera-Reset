@@ -159,6 +159,7 @@ void AMyPlayerController::CameraReset(float InDeltaTime)
 	///
 	// ---------------------------------------------------------------
 	// This is one way of solving this problem.
+	//
 	// Feel free to utilize a different solution!
 	//
 	// Don't forget to share it if you feel comfortable with that! <3
@@ -232,7 +233,7 @@ void AMyPlayerController::CameraReset(float InDeltaTime)
 			ControlRotation = FMath::RInterpTo(GetControlRotation(), FRotator(0.0f, ActorRotationYaw, 0.0f), InDeltaTime, InterpSpeed);
 
 			// Alternative with a Constant Interpolation Speed instead of Strong Start/Ease Out
-			//ControlRotation = FMath::RInterpConstantTo(GetControlRotation(), FRotator(0.0f, ActorRotationYaw, 0.0f), InDeltaTime, InterpSpeed);
+			// ControlRotation = FMath::RInterpConstantTo(GetControlRotation(), FRotator(0.0f, ActorRotationYaw, 0.0f), InDeltaTime, InterpSpeed);
 		}
 	}
 }
