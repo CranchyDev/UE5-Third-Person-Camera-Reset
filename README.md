@@ -39,7 +39,10 @@ Further information on how these calculations are implemented, can be found with
 > 
 > **There's an option for the same mechanic to exist either within MyCharacter or MyPlayerController.**
 > 
-> **If you prefer to control everything with MyPlayerController, then do not uncomment the parts within MyCharacter.**
+> **If you prefer to control everything with MyPlayerController, then do not uncomment certain parts within MyCharacter, namely:**
+> 
+> - **SetupPlayerInputComponent.**
+> - **SetCameraResetTrue.**
 > 
 > **However, if you prefer to control everything with MyCharacter, then comment out the necessary code within MyPlayerController.**
 > 
