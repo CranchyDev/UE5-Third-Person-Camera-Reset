@@ -36,15 +36,18 @@ Further information on how these calculations are implemented, can be found with
 
 > [!NOTE]
 > **C++ warning:**
+> 
 > **There's an option for the same mechanic to exist either within MyCharacter or MyPlayerController.**
-> **If you prefer to control everything with the PlayerController, then do not uncomment the parts within MyCharacter.**
-> **However, if you prefer to control everything from within the Character, then comment out the necessary code within MyPlayerController**
+> 
+> **If you prefer to control everything with MyPlayerController, then do not uncomment the parts within MyCharacter.**
+> 
+> **However, if you prefer to control everything with MyCharacter, then comment out the necessary code within MyPlayerController.**
+> 
 > **The default is to use MyPlayerController (set within SamepleGameMode.cpp).**
 > 
 > **For further information, check the corresponding files within this repository.**
 > 
-> **Also make sure to change YOURPROJECT_API to THENAMEOFYOURPROJECT_API**
-> 
+> **Also make sure to change YOURPROJECT_API to THENAMEOFYOURPROJECT_API, in case you are 'Copy&Pasting'.**
 > **And change YourClassName to the name of your Class.**
 
 <hr>
