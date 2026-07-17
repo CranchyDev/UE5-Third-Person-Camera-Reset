@@ -52,6 +52,15 @@ Further information on how these calculations are implemented, can be found with
 > 
 > **Also make sure to change YOURPROJECT_API to THENAMEOFYOURPROJECT_API, in case you are 'Copy&Pasting'.**
 > **And change YourClassName to the name of your Class.**
+>
+> **And lastly, Generate Visual Studio Files by Right Clicking the SampleProject_5_8_C Unreal Engine file FIRST.**
+> 
+> ---
+>
+> **Blueprint warning:**
+>
+> **Don't be scared if you only see a few folders. Whenever you open the project, the missing folders will be created.**
+> **The project was thinned out of shaders and whatnot purposefuly to make it a lot more portable.**
 
 <hr>
 
