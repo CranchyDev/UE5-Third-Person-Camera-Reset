@@ -35,8 +35,13 @@ Further information on how these calculations are implemented, can be found with
 ### C++
 
 > [!NOTE]
-> **I am assuming that you are utilizing a PlayerController for this code. If using Character instead, some parts of the setup are a bit different.**
-> **Check the corresponding files within this repository.**
+> **C++ warning:**
+> **There's an option for the same mechanic to exist either within MyCharacter or MyPlayerController.**
+> **If you prefer to control everything with the PlayerController, then do not uncomment the parts within MyCharacter.**
+> **However, if you prefer to control everything from within the Character, then comment out the necessary code within MyPlayerController**
+> **The default is to use MyPlayerController (set within SamepleGameMode.cpp).**
+> 
+> **For further information, check the corresponding files within this repository.**
 > 
 > **Also make sure to change YOURPROJECT_API to THENAMEOFYOURPROJECT_API**
 > 
@@ -93,7 +98,17 @@ void AYourPlayerController::CameraReset(float InDeltaTime)
 
 ### Blueprint
 
-To be added later . . .
+#### Step 1:
+<img width="1257" height="762" alt="Screenshot1" src="https://github.com/user-attachments/assets/824684db-479c-44dc-b93e-c819fd4243ae" />
+
+
+#### Step 2:
+<img width="1335" height="886" alt="Screenshot2" src="https://github.com/user-attachments/assets/1d3de5b0-a27d-4a9c-8fa6-cda1189ebd35" />
+
+
+#### Step 3:
+<img width="1860" height="863" alt="Screenshot3" src="https://github.com/user-attachments/assets/7741ecf0-d833-47d8-a4a5-14e81f12e8b4" />
+
 
 ## Conclusion & Notes
 
