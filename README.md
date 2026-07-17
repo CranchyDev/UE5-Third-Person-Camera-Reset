@@ -60,7 +60,7 @@ Further information on how these calculations are implemented, can be found with
 > **Blueprint warning:**
 >
 > **Don't be scared if you only see a few folders. Whenever you open the project, the missing folders will be created.**
-> **The project was thinned out of shaders and whatnot purposefuly to make it a lot more portable.**
+> **The project was thinned out of shaders and whatnot purposefully to make it a lot more portable.**
 
 <hr>
 
