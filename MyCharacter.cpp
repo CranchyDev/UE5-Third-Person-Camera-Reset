@@ -105,11 +105,6 @@ void AMyCharacter::Tick(float DeltaTime)
 	{
 		CameraReset(DeltaTime);
 	}
-
-	if (Timer_FinishCameraReset.IsValid())
-	{
-		UE_LOG(LogTemp, Warning, TEXT("%f"), GetWorldTimerManager().GetTimerRemaining(Timer_FinishCameraReset));
-	}
 }
 
 // Called to bind functionality to input
